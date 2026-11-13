@@ -1,5 +1,9 @@
 # BetterActivity
 
+[![CI](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml)
+[![许可证：MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![已验证 DSH 0.2.2-rc.2](https://img.shields.io/badge/DSH-0.2.2--rc.2-4d6bfe)](packages/activity/compatibility.json)
+
 [English](README_EN.md) · 中文
 
 通过 DSH 侧栏底部的铃铛查看近期活动。打开独立浮层，保留当前聊天和原生会话列表。
@@ -21,13 +25,19 @@
 
 ## 安装
 
-在所用 DSH 运行环境中安装本地预构建包：
+1. 打开 [GitHub Actions](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml)，选择 `main` 分支最近一次成功的 **Verify plugin** 运行。
+2. 在该运行的 **Artifacts** 区域下载 `better-activity-windows-latest` 或 `better-activity-ubuntu-latest` ZIP。
+3. 解压 ZIP，找到 `dsh-better-activity-0.2.0.tgz`。
+
+在所用 DSH 运行环境中安装解压得到的 `.tgz`：
 
 ```sh
 dsh plugin --profile web add /path/to/dsh-better-activity-0.2.0.tgz
 ```
 
-Windows 桌面可通过其插件管理安装同一 tgz。要求运行时为 DSH 0.2.2-rc.2、Node.js >=24.9.0。安装后刷新界面。预构建包由 [GitHub Actions](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml) 生成，可从成功运行的 Artifacts 下载；当前尚未发布 npm 包或 GitHub Release。
+Windows 桌面可通过其插件管理安装同一 tgz。要求运行时为 DSH 0.2.2-rc.2、Node.js >=24.9.0。安装后刷新界面。
+
+CI 产物保留 **7 天**。当前尚未发布 npm 包或 GitHub Release。
 
 本轮完整验收覆盖官方 Web 运行时。Windows 桌面复验尚未完成，具体记录见下方验证说明。
 

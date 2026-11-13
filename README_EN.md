@@ -1,5 +1,9 @@
 # BetterActivity
 
+[![CI](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Verified DSH 0.2.2-rc.2](https://img.shields.io/badge/DSH-0.2.2--rc.2-4d6bfe)](packages/activity/compatibility.json)
+
 English · [中文](README.md)
 
 View recent DSH activity from the sidebar footer bell. The activity dialog preserves the current conversation and native conversation browser.
@@ -21,13 +25,19 @@ View recent DSH activity from the sidebar footer bell. The activity dialog prese
 
 ## Installation
 
-Use the CLI belonging to your DSH runtime:
+1. Open [GitHub Actions](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml) and select the latest successful **Verify plugin** run on `main`.
+2. Under **Artifacts**, download either the `better-activity-windows-latest` or `better-activity-ubuntu-latest` ZIP.
+3. Extract the ZIP and locate `dsh-better-activity-0.2.0.tgz`.
+
+Install the extracted `.tgz` using the CLI belonging to your DSH runtime:
 
 ```sh
 dsh plugin --profile web add /path/to/dsh-better-activity-0.2.0.tgz
 ```
 
-Windows desktop can install the same tgz through its plugin manager. Requires DSH 0.2.2-rc.2 and Node.js >=24.9.0. Refresh the interface after installation. [GitHub Actions](https://github.com/MakerFlyFly/DSH-better-activity/actions/workflows/ci.yml) builds prebuilt packages, available under Artifacts on successful runs. No npm package or GitHub Release has been published.
+Windows desktop can install the same tgz through its plugin manager. Requires DSH 0.2.2-rc.2 and Node.js >=24.9.0. Refresh the interface after installation.
+
+CI artifacts are retained for **7 days**. No npm package or GitHub Release has been published.
 
 This acceptance run covers the official Web runtime. Windows desktop revalidation is incomplete; see the validation record below.
 
