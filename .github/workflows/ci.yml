@@ -22,7 +22,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
-      BETTER_ACTIVITY_TEST_RUNTIME: ${{ runner.temp }}/better-activity-stock-runtime
       DSH_TELEMETRY_DISABLED: '1'
     defaults:
       run:
@@ -70,7 +69,7 @@ jobs:
         run: node scripts/package.mjs
 
       - name: Prepare a separate official runtime
-        run: node scripts/prepare-runtime.mjs "$BETTER_ACTIVITY_TEST_RUNTIME"
+        run: node scripts/prepare-runtime.mjs "$RUNNER_TEMP/better-activity-stock-runtime"
 
       - name: Test plugin and packed installation on the official runtime
         run: |
