@@ -1,0 +1,51 @@
+diff --git a/packages/typert/generator/src/analyzer.ts b/packages/typert/generator/src/analyzer.ts
+index aaefd42cde..1a1e1243a4 100644
+--- a/packages/typert/generator/src/analyzer.ts
++++ b/packages/typert/generator/src/analyzer.ts
+@@ -2090,6 +2090,14 @@ class FaceAnalyzer {
+     if (declaration === undefined) return false
+     const registration = this.registrationForFile(declaration.getSourceFile().fileName)
+     if (registration?.name === '@deepseek-ai/dsh-typert-protocol') return true
++    // An out-of-tree package consumes the installed protocol declarations,
++    // which have no registration in its own workspace aggregate.
++    for (const imported of symbol.declarations ?? []) {
++      if (!ts.isImportSpecifier(imported)) continue
++      const statement = imported.parent.parent.parent
++      if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier)
++        && statement.moduleSpecifier.text === '@deepseek-ai/dsh-typert-protocol') return true
++    }
+     for (let current: ts.Node | undefined = declaration; current !== undefined; current = optionalParent(current)) {
+       if (ts.isModuleDeclaration(current)
+         && ts.isStringLiteral(current.name)
+diff --git a/packages/typert/generator/tests/remote-metadata.spec.ts b/packages/typert/generator/tests/remote-metadata.spec.ts
+index 60a979ac5e..8590e0b947 100644
+--- a/packages/typert/generator/tests/remote-metadata.spec.ts
++++ b/packages/typert/generator/tests/remote-metadata.spec.ts
+@@ -89,6 +89,27 @@ function assertConsumerTypechecks(root: string, dts: string, source: string): vo
+ }
+ 
+ describe('Remote method metadata', { timeout: 60_000 }, () => {
++  it('recognizes directly imported markers from installed protocol declarations', () => {
++    const root = fixture()
++    // A normal installed declaration file exports its symbols directly; it
++    // has neither an ambient wrapper nor a workspace package registration.
++    editFile(root, 'typert-protocol.d.ts', source => source
++      .replace("declare module '@deepseek-ai/dsh-typert-protocol' {", '')
++      .replace(/}\s*$/, ''))
++    editFile(root, 'packages/domain/src/index.ts', () => 'export {}\n')
++    editFile(root, 'packages/remote/src/index.ts', () => [
++      "import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'",
++      'export class ExternalService extends TypertRemoteService {',
++      "  constructor() { super(undefined, 'external') }",
++      "  @Remote('snapshot')",
++      '  snapshot(): { revision: number } { return { revision: 0 } }',
++      '}',
++    ].join('\n'))
++    const artifact = new WorkspaceTypertGenerator(root).generate(['@fixture/remote'], ['host'])[0]
++    expect(artifact?.remote?.dts).toContain('TypertRemoteMap')
++    expect(artifact?.remote?.js).toContain('createTypertRemoteInfo')
++  })
++
+   it('keeps selected and full-face artifacts identical when another package augments inputs and results', async () => {
+     const root = fixture()
+     const extension = join(root, 'packages/extension')

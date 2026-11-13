@@ -1,0 +1,13 @@
+{
+  "dshVersion": "0.2.2-rc.2",
+  "node": ">=24.9.0",
+  "pnpm": "11.28.5",
+  "requiresHostPatches": false,
+  "validatedSourceCommit": "e8f7b93a344964de3dca1ace9e72b6e4d6de87cb",
+  "upstream": "https://github.com/deepseek-ai/deepseek-harness.git",
+  "buildToolFix": {
+    "path": "scripts/patches/remote-generator.patch",
+    "sha256": "ba7e648669cf1adae45458c9e8bc00ff9bfc978c7ccc3940185909751fac3054",
+    "runtimeRequired": false
+  }
+}

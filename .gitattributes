@@ -1,0 +1,6 @@
+* text=auto eol=lf
+# Compatibility hashes cover the original patch bytes on every platform.
+*.patch -text -whitespace
+*.png binary
+*.tgz binary
+*.zip binary

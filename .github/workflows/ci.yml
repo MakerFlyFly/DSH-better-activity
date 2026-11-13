@@ -1,0 +1,91 @@
+name: Verify plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      BETTER_ACTIVITY_TEST_RUNTIME: ${{ runner.temp }}/better-activity-stock-runtime
+      DSH_TELEMETRY_DISABLED: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out plugin
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out independent build tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: deepseek-ai/deepseek-harness
+          ref: e8f7b93a344964de3dca1ace9e72b6e4d6de87cb
+          path: .dev/build-host
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.14.0'
+
+      - name: Set up pnpm from packageManager
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Fix metadata generation in the build-tool checkout only
+        run: git -C .dev/build-host apply "$GITHUB_WORKSPACE/scripts/patches/remote-generator.patch"
+
+      - name: Install DSH dependencies
+        working-directory: .dev/build-host
+        run: pnpm install --frozen-lockfile --package-import-method=copy
+
+      - name: Build and check DSH
+        working-directory: .dev/build-host
+        run: pnpm run build --serial
+
+      - name: Link plugin development dependencies
+        run: node scripts/link-dsh.mjs .dev/build-host
+
+      - name: Build Host and Client
+        run: node scripts/build.mjs
+
+      - name: Pack review artifacts
+        run: node scripts/package.mjs
+
+      - name: Prepare a separate official runtime
+        run: node scripts/prepare-runtime.mjs "$BETTER_ACTIVITY_TEST_RUNTIME"
+
+      - name: Test plugin and packed installation on the official runtime
+        run: |
+          export BETTER_ACTIVITY_TEST_TARBALL="$(node -e "const p=require('./packages/activity/package.json');process.stdout.write(require('node:path').resolve('dist',p.name+'-'+p.version+'.tgz'))")"
+          node node_modules/vitest/vitest.mjs run
+
+      - name: Retain build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: better-activity-${{ matrix.os }}
+          path: |
+            dist/*.tgz
+            dist/BetterActivity-source.zip
+            dist/SHA256SUMS
+            dist/compatibility.json
+            dist/VALIDATION.md
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,34 @@
+/* Footer launcher and a bounded activity list using the native dialog material. */
+.launcher { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; width: 100%; height: 42px; padding: 0 10px; border: 0; border-radius: var(--dsw-radius-md); background: transparent; color: var(--dsw-alias-label-primary); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.launcher.rail { justify-content: center; flex: none; width: 36px; height: 36px; padding: 0; }
+.launcher:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.launcher.active { background: var(--dsw-specific-sidebar-nav-item-active-accent); }
+.launcherIcon { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; width: 20px; height: 20px; }
+.launcherLabel { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.iconButton { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--dsw-radius-md); background: transparent; color: var(--dsw-alias-label-secondary); cursor: pointer; }
+.iconButton:hover { background: var(--dsw-alias-interactive-bg-hover); }
+.unread { position: absolute; width: 6px; height: 6px; right: 0; top: 0; border-radius: 50%; background: var(--dsw-alias-brand-primary-new-colorprimary-new-color); outline: 2px solid var(--dsw-specific-sidebar-fill); }
+.dialog { width: min(440px, 100%); max-height: min(640px, 100%); padding: 0; gap: 0; }
+.root { display: flex; flex: 1; flex-direction: column; min-height: 0; min-width: 0; }
+.dialogHeader { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 8px; padding: 16px 14px 10px 20px; }
+.dialogHeader h2 { margin: 0; color: var(--dsw-alias-label-primary); font-size: 16px; line-height: 24px; font-weight: 500; }
+.scroller { flex: 1; overflow-y: auto; min-height: 0; padding: 0 8px 12px; scrollbar-gutter: stable; }
+.group + .group { margin-top: 18px; }
+.heading { min-height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 2px var(--dsh-sidebar-row-padding, 12px); color: var(--dsw-alias-label-tertiary); font-size: 13px; font-weight: 500; }
+.list { margin: 0; padding: 0; list-style: none; }
+.row { width: 100%; display: flex; flex-direction: column; align-items: stretch; min-width: 0; margin: 1px 0; padding: 7px var(--dsh-sidebar-row-padding, 12px); border: 0; border-radius: var(--dsw-radius-md); text-align: left; cursor: pointer; background: transparent; color: var(--dsw-alias-label-primary); font: inherit; }
+.row:hover, .row.selected { background: var(--dsw-alias-interactive-bg-hover); }
+.row:focus-visible, .iconButton:focus-visible, .more:focus-visible, .launcher:focus-visible { outline: 2px solid var(--dsw-alias-brand-primary-new-colorprimary-new-color); outline-offset: -2px; }
+.titleLine { display: flex; align-items: center; gap: 5px; min-width: 0; line-height: 21px; }
+.title { flex: 0 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; font-weight: 400; }
+.project { flex: 0 2 auto; min-width: 0; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dsw-alias-label-tertiary); font-size: 12px; }
+.status { display: flex; align-items: center; flex: none; margin-left: auto; min-width: 14px; }
+.preview { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; color: var(--dsw-alias-label-secondary); font-size: 13px; line-height: 19px; }
+.children { color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 18px; }
+.notice { flex: none; font-size: 12px; color: var(--dsw-alias-label-secondary); padding: 6px 20px; }
+.notice button, .more { border: 0; background: transparent; color: var(--dsw-alias-brand-primary-new-colorprimary-new-color); cursor: pointer; font: inherit; }
+.notice button { margin-left: 6px; }
+.more { width: 100%; padding: 10px; font-size: 13px; }
+.empty { padding: 28px 12px; text-align: center; font-size: 13px; color: var(--dsw-alias-label-tertiary); }
+.skeletons { padding: 8px 12px; }
+.skeleton { height: 42px; margin-bottom: 16px; background: var(--dsw-alias-interactive-bg-hover); border-radius: var(--dsw-radius-md); }
